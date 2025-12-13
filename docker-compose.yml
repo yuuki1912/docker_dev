@@ -1,0 +1,30 @@
+services:
+  frontend:
+    build:
+      context: ./frontend # dockerfile実行場所を指定
+      dockerfile: Dockerfile
+    container_name: frontend
+    volumes:
+      - ./frontend:/frontend
+    ports:
+      - 3000:3000
+    command: ["sh", "/frontend/entrypoint.sh"]
+
+    #command: /frontend/entrypoint.sh
+    #↑上記の書き方だと、Docker公式の docker-entrypoint.sh が起動されてしまい、自分で作成したファイルが実行されない
+    #なので、["sh", "/frontend/entrypoint.sh"] 左記のような書き方で必ずシェル経由で実行する
+    #entrypoint.shの1行目を#!bin/shにしているので、["sh", "frontend/entrypoint.sh"]左記のような第一引数をsh指定にしている。
+    #entrypoint.shの1行目が#bin/bashであれば、["bash", "frontend/entrypoint.sh"]と記述する
+  db:
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+    container_name: mysql
+    platform: linux/amd64
+    volumes:
+      - ./db/data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
