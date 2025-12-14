@@ -15,6 +15,14 @@ services:
     #なので、["sh", "/frontend/entrypoint.sh"] 左記のような書き方で必ずシェル経由で実行する
     #entrypoint.shの1行目を#!bin/shにしているので、["sh", "frontend/entrypoint.sh"]左記のような第一引数をsh指定にしている。
     #entrypoint.shの1行目が#bin/bashであれば、["bash", "frontend/entrypoint.sh"]と記述する
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx:/nginx
+
   db:
     build:
       context: ./mysql
